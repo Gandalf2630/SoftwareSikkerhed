@@ -1,5 +1,5 @@
 # ITTekniker
-This is a dummy project. And none of the details in it are real, it is for demonstration and testing purposes only.
+
 1. Ækvivalensklasser (Testteknik)
 
 Ækvivalensklasser bruges til at gruppere input, der forventes at give samme resultat.
