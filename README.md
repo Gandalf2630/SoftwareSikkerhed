@@ -111,3 +111,52 @@ Dette giver hurtig feedback og lav risiko.
 Security gate:
 
 Konsolidering med tooling / Quality gates
+
+
+
+# Flat File DB (JSON) - Svær
+
+## Hvad er det?
+En lille database implementeret som en JSON-fil, der gemmer `person`-objekter med felter:
+`{ person_id, first_name, last_name, address, street_number, password, enabled }`.
+
+## Hvorfor er en flat_file_db smart?
+- **Lav kompleksitet**: ingen DB-server, ingen migrations, nemt at komme i gang.
+- **Let deployment**: én fil der kan flyttes/backup’es.
+- **God til små projekter og prototyper**.
+- **Ulemper**: dårligere performance på store datasæt, concurrency er sværere, ingen indekser.
+
+## Implementerede funktioner
+- `insert_person` (auto-id hvis mangler, validering, password hashing)
+- `get_person_by_id`
+- `find_persons` (filter på navn + enabled)
+- `update_person` (patch update + hashing af password)
+- `delete_person`
+- `set_enabled`
+
+## Test design teknikker (anvendt)
+- **Equivalence Partitioning**: gyldige/ugyldige typer for `enabled`, `street_number`.
+- **Boundary Value Analysis**: `street_number` > 0 (0 og -1 er ugyldige).
+- **Negative testing**: duplicate `person_id`, update på ikke-eksisterende id, invalid patch.
+
+## Unit tests (screenshots)
+Indsæt screenshot her af `pytest -q` output.
+
+## Gode testnavne (eksempler)
+- `test_insert_person_shouldPersistPerson_whenValidPersonProvided`
+- `test_insert_person_shouldThrow_whenPersonIdAlreadyExists`
+- `test_update_person_shouldOnlyPatchProvidedFields_whenPatchProvided`
+
+## Given/When/Then i test cases
+Indsæt screenshot her af tests som viser `# Given`, `# When`, `# Then`.
+
+## Risiko hvis tests ikke består (eksempler)
+- Hvis duplicate-id testen fejler: **data corruption/overskrivning**.
+- Hvis password-hash testen fejler: **password gemmes i plaintext (kritisk sårbarhed)**.
+- Hvis patch-update testen fejler: **utilsigtet datatab**.
+- Hvis delete testen fejler: **privacy/compliance og “ghost data”**.
+
+## Sådan kører du det
+```bash
+pip install -r requirements.txt
+pytest -q
