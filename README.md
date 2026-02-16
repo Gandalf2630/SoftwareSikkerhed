@@ -160,3 +160,184 @@ Indsæt screenshot her af tests som viser `# Given`, `# When`, `# Then`.
 ```bash
 pip install -r requirements.txt
 pytest -q
+
+
+
+
+
+
+
+Opgave – Kryptering og Hashing (Svær)
+Valg af algoritmer
+
+I denne opgave har jeg implementeret både en krypteringsalgoritme og en hashing-algoritme for at overholde GDPR og sikre korrekt håndtering af passwords.
+
+Overvejede krypteringsalgoritmer
+
+AES-CBC
+
+ChaCha20-Poly1305
+
+AES-256-GCM
+
+Jeg valgte AES-256-GCM, fordi:
+
+Det er en industristandard.
+
+Det giver både fortrolighed og integritet (via authentication tag).
+
+Det er sikkert og effektivt.
+
+Det kræver ikke separat HMAC, som AES-CBC gør.
+
+AES-256-GCM bruges til at kryptere:
+
+fornavn
+
+efternavn
+
+by
+
+email
+
+telefon
+
+Overvejede hashing-algoritmer
+
+SHA-256
+
+bcrypt
+
+Argon2id
+
+Jeg valgte Argon2id, fordi:
+
+Det er designet specifikt til password hashing.
+
+Det beskytter mod brute-force og GPU-angreb.
+
+Det er memory-hard, hvilket gør angreb mere ressourcekrævende.
+
+Det anbefales som best practice i moderne systemer.
+
+Passwords bliver derfor hashed – aldrig krypteret.
+
+Hvornår krypteres data?
+
+Data krypteres:
+
+Når en bruger oprettes
+
+Når en bruger opdaterer sine oplysninger
+
+Lige inden data gemmes i databasen
+
+Flow:
+
+API modtager plaintext
+
+Input valideres
+
+Personfølsomme felter krypteres
+
+Ciphertext gemmes i databasen
+
+Formålet er at sikre, at databasen aldrig indeholder persondata i klartekst.
+
+Hvornår dekrypteres data?
+
+Data dekrypteres:
+
+Når en autoriseret bruger henter sine oplysninger
+
+Kun i service-laget
+
+Lige før data returneres til klienten
+
+Flow:
+
+Data hentes fra database (krypteret)
+
+Dekrypteres midlertidigt
+
+Sendes som DTO til klienten
+
+Dekryptering sker kun, når det er nødvendigt, for at minimere eksponering.
+
+Hvornår fjernes dekrypteret data fra hukommelsen?
+
+Dekrypteret data eksisterer kun i requestens scope.
+
+Tiltag:
+
+Krypteringsnøgler gemmes ikke i klartekst i koden.
+
+Byte-arrays nulstilles efter brug, hvor det er muligt.
+
+Der logges aldrig personfølsomme oplysninger.
+
+Data caches ikke i klartekst.
+
+Formålet er at reducere risikoen for memory scraping og utilsigtet eksponering.
+
+Databasestruktur
+
+Følgende felter gemmes krypteret:
+
+{
+  kunde_id: 1,
+  fornavn: <krypteret>,
+  efternavn: <krypteret>,
+  by: <krypteret>,
+  email: <krypteret>,
+  telefon: <krypteret>,
+  password: <hashed>
+}
+
+
+Password gemmes som:
+
+Hash
+
+Salt
+
+Argon2 konfigurationsparametre
+
+Sikkerhedsovervejelser
+
+Jeg har også taget højde for:
+
+Nøglehåndtering (nøglen må ikke hardcodes i produktion)
+
+Mulighed for key rotation
+
+Ingen logging af følsomme data
+
+Test af:
+
+Korrekt kryptering/dekryptering
+
+Forkert nøgle giver fejl
+
+Password verification
+
+Ingen plaintext i database
+
+Konklusion
+
+Jeg har implementeret:
+
+AES-256-GCM til kryptering af persondata
+
+Argon2id til password hashing
+
+Løsningen sikrer:
+
+Overholdelse af GDPR
+
+Sikker password-opbevaring
+
+Minimal eksponering af følsomme data
+
+Brug af moderne kryptografiske standarder
+
