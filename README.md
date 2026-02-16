@@ -167,7 +167,7 @@ pytest -q
 
 
 
-Opgave – Kryptering og Hashing (Svær)
+**Opgave – Kryptering og Hashing (Svær)**
 Valg af algoritmer
 
 I denne opgave har jeg implementeret både en krypteringsalgoritme og en hashing-algoritme for at overholde GDPR og sikre korrekt håndtering af passwords.
